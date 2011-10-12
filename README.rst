@@ -60,7 +60,6 @@ modules will be automatically installed if not present.
 * paramiko
 * pycrypto
 * argparse
-* cloudfiles (optional)
 
 
 Installation
