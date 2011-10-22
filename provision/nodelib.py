@@ -165,6 +165,7 @@ class Deployment(object):
 
         self.name = name or prefix + config.random_str()
         config.SUBMAP['node_name'] = self.name
+        config.SUBMAP['node_shortname'] = self.name.split('.')[0]
         merge_keyvals_into_map(subvars, config.SUBMAP)
         logger.debug('substitution map {0}'.format(config.SUBMAP))
 
