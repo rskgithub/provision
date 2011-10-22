@@ -177,10 +177,9 @@ class Deployment(object):
         filemap = {}
         scriptmap = provision.collections.OrderedDict() # preserve script run order
 
-        if image_name in config.BOOTSTRAPPED_IMAGE_NAMES:
-            install_bundles = config.DEFAULT_BUNDLES[:]
-        else:
-            install_bundles = config.DEFAULT_BOOTSTRAP_BUNDLES[:]
+        install_bundles = config.DEFAULT_BUNDLES[:]
+        if image_name not in config.BOOTSTRAPPED_IMAGE_NAMES:
+            install_bundles.extend(config.DEFAULT_BOOTSTRAP_BUNDLES[:])
         install_bundles.extend(bundles)
 
         for bundle in install_bundles:
