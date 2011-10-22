@@ -187,7 +187,6 @@ class Deployment(object):
             merge(config.BUNDLEMAP[bundle].filemap.items(), filemap)
             merge(config.BUNDLEMAP[bundle].scriptmap.items(), scriptmap, load=True)
         logger.debug('files {0}'.format(filemap.keys()))
-        logger.debug('files {0}'.format(filemap.values()))
         logger.debug('scripts {0}'.format(scriptmap.keys()))
 
         file_deployments = [libcloud.compute.deployment.FileDeployment(
