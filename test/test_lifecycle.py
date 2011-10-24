@@ -7,7 +7,7 @@ class TestLifecycle(unittest.TestCase):
 
     """This test actually deploys and destroys a node, so it takes a long time to run"""
 
-    def test_node_lifecycle(self):
+    def broken_node_lifecycle(self):
         deployment = nodelib.Deployment()
         driver = nodelib.get_driver(config.DEFAULT_SECRET_KEY, config.DEFAULT_USERID,
                                     config.DEFAULT_PROVIDER)
