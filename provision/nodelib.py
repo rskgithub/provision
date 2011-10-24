@@ -165,6 +165,7 @@ class Deployment(object):
 
         self.name = name or prefix + config.random_str()
         config.SUBMAP['node_name'] = self.name
+        config.SUBMAP['node_shortname'] = self.name.split('.')[0]
         merge_keyvals_into_map(subvars, config.SUBMAP)
         logger.debug('substitution map {0}'.format(config.SUBMAP))
 
@@ -176,10 +177,9 @@ class Deployment(object):
         filemap = {}
         scriptmap = provision.collections.OrderedDict() # preserve script run order
 
-        if image_name in config.BOOTSTRAPPED_IMAGE_NAMES:
-            install_bundles = config.DEFAULT_BUNDLES[:]
-        else:
-            install_bundles = config.DEFAULT_BOOTSTRAP_BUNDLES[:]
+        install_bundles = config.DEFAULT_BUNDLES[:]
+        if image_name not in config.BOOTSTRAPPED_IMAGE_NAMES:
+            install_bundles.extend(config.DEFAULT_BOOTSTRAP_BUNDLES[:])
         install_bundles.extend(bundles)
 
         for bundle in install_bundles:
@@ -187,7 +187,6 @@ class Deployment(object):
             merge(config.BUNDLEMAP[bundle].filemap.items(), filemap)
             merge(config.BUNDLEMAP[bundle].scriptmap.items(), scriptmap, load=True)
         logger.debug('files {0}'.format(filemap.keys()))
-        logger.debug('files {0}'.format(filemap.values()))
         logger.debug('scripts {0}'.format(scriptmap.keys()))
 
         file_deployments = [libcloud.compute.deployment.FileDeployment(

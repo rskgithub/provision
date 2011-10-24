@@ -206,7 +206,7 @@ def NodeDriver_connect_ssh_client(self, ssh_client, wait_period=3, timeout=300):
         try:
             ssh_client.connect()
             logger.debug('client provisionally connected')
-            if 'Please login as the user' in ssh_client.run('pwd')[0]:
+            if 'Please login as the' in ssh_client.run('pwd')[0]:
                 raise LoginDisabledError('%s login disabled' % ssh_client.username)
         except (LoginDisabledError, SFTPError, EOFError, IOError,
                 socket.gaierror, socket.error) as e:

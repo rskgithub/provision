@@ -8,6 +8,14 @@ Philosophy
 Provision makes it easy to create cloud servers with complicated
 configurations from the command line.
 
+#. Truly provider independent
+
+#. Command line and python API
+
+#. Configured through python files, with common configuration + secrets
+
+#. Repeatable deployment of nodes with bootstrapping
+
 Introduction
 ============
 
@@ -60,7 +68,6 @@ modules will be automatically installed if not present.
 * paramiko
 * pycrypto
 * argparse
-* cloudfiles (optional)
 
 
 Installation
