@@ -65,10 +65,22 @@ if [[ "$?" != "0" ]]; then
   exit 1
 fi
 
-echo easy_install pycrypto
-easy_install pycrypto
+#echo easy_install pycrypto
+#easy_install pycrypto
+#if [[ "$?" != "0" ]]; then
+#  echo "Problem in pycrypto install"
+#  exit 1
+#fi
+echo "Downloading pycrypto"
+download_file pycrypto-2.4.tar.gz http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto/pycrypto-2.4.tar.gz
+cd $DOWNLOAD_DIR
+tar xvzf pycrypto-2.4.tar.gz
+cd pycrypto-2.4
+echo "Installing pycrypto"
+echo python setup.py install
+python setup.py install
 if [[ "$?" != "0" ]]; then
-  echo "Problem in pycrypto install"
+  echo "problem in install of pycrtypo"
   exit 1
 fi
 
