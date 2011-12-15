@@ -57,9 +57,9 @@ else
   fi
 fi
 
-download_file virtualenv-1.6.4.tar.gz http://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.6.4.tar.gz#md5=1072b66d53c24e019a8f1304ac9d9fc5
-echo easy_install $DOWNLOAD_DIR/virtualenv-1.6.4.tar.gz
-easy_install $DOWNLOAD_DIR/virtualenv-1.6.4.tar.gz
+download_file virtualenv-1.7.tar.gz http://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.7.tar.gz#md5=dcc105e5a3907a9dcaa978f813a4f526
+echo easy_install $DOWNLOAD_DIR/virtualenv-1.7.tar.gz
+easy_install $DOWNLOAD_DIR/virtualenv-1.7.tar.gz
 if [[ "$?" != "0" ]]; then
   echo "problem in install of virtualenv"
   exit 1
