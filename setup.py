@@ -9,17 +9,17 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'list-nodes = provision.list:main',
             'deploy-node = provision.deploy:main',
             'destroy-node = provision.destroy:main',
             ]},
-    install_requires=['apache-libcloud=0.6.2',
+    install_requires=['apache-libcloud==0.6.2',
                       'argparse>=1.1',
                       'pycrypto>=2.1.0',
                       'paramiko>=1.7.6',],
-    test_suite = 'test',
+    test_suite='test',
     license='Apache V2.0',
     description='Create highly customized servers in the cloud',
     long_description=open('README.rst').read(),
