@@ -128,7 +128,6 @@ libcloud.compute.deployment.SSHKeyDeployment = SSHKeyDeployment
 libcloud.compute.deployment.FileDeployment = FileDeployment
 
 
-import socket
 import time
 from libcloud.common.types import LibcloudError
 from libcloud.compute.types import NodeState
@@ -148,33 +147,19 @@ def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600):
 
     @return: C{Node} Node instance on success.
     """
-
     end = time.time() + timeout
-
     while time.time() < end:
         nodes = [n for n in self.list_nodes() if n.uuid == node.uuid]
-
-        if len(nodes) == 0:
-            raise LibcloudError(value=('Booted node[%s] ' % node
-                                + 'is missing from list_nodes.'),
-                                driver=self)
-
         if len(nodes) > 1:
-            raise LibcloudError(value=('Booted single node[%s], ' % node
-                                + 'but multiple nodes have same UUID'),
-                                driver=self)
-
-        node = nodes[0]
-
-        if (node.public_ip is not None
-            and node.public_ip != ""
-            and node.state == NodeState.RUNNING):
-            return node
+            raise LibcloudError(
+                value='Booted single node[%s], but multiple nodes have same UUID' % node,
+                driver=self)
+        if len(nodes) == 1 and nodes[0].public_ips and nodes[0].state == NodeState.RUNNING:
+            return nodes[0]
         else:
             time.sleep(wait_period)
             continue
-
-    raise LibcloudError(value='Timed out after %s seconds' % (timeout),
+    raise LibcloudError(value='Timed out after %s seconds' % timeout,
                         driver=self)
 
 
