@@ -15,7 +15,7 @@ setup(
             'deploy-node = provision.deploy:main',
             'destroy-node = provision.destroy:main',
             ]},
-    install_requires=['apache-libcloud>=0.6.2',
+    install_requires=['apache-libcloud>=0.9.1',
                       'argparse>=1.1',
                       'pycrypto>=2.1.0',
                       'paramiko>=1.7.6',],
