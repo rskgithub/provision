@@ -15,7 +15,7 @@ def parser():
 def print_list():
     parsed = config.reconfig(parser)
     driver = nodelib.get_driver(parsed.secret_key, parsed.userid, parsed.provider)
-    [print('%s %s' % (n.name, n.public_ip[0] if len(n.public_ip) else ''))
+    [print('%s %s' % (n.name, n.public_ips[0] if len(n.public_ips) else ''))
      for n in nodelib.list_nodes(driver)]
 
 def main():
