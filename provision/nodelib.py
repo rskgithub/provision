@@ -216,6 +216,8 @@ class Deployment(object):
         size.  Then, get the image. Finally, deploy node, and return
         NodeProxy. """
 
+        logger.debug('deploying node %s using driver %s' % (self.name, driver))
+
         args = {'name': self.name}
 
         if 'SSH_KEY_PATH' in config.__dict__:
@@ -223,8 +225,6 @@ class Deployment(object):
                                            config.SSH_KEY_PATH).group('keyname')
         if 'EX_USERDATA' in config.__dict__:
             args['ex_userdata'] = config.EX_USERDATA
-
-        logger.debug('deploying node %s using driver %s' % (self.name, driver))
 
         args['location'] = driver.list_locations()[location_id]
         logger.debug('location %s' % args['location'])
