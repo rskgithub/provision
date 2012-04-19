@@ -1,6 +1,7 @@
 import unittest
 
 import libcloud.compute.types
+import libcloud.compute.base
 
 import provision.config as config
 
@@ -8,6 +9,7 @@ class TestHandleErrors(unittest.TestCase):
 
     def setUp(self):
         self.devnull = open('/dev/null', 'w')
+        self.node = libcloud.compute.base.Node(1, 'testnode', None, None, None, None)
 
     def tearDown(self):
         self.devnull.close()
@@ -43,7 +45,7 @@ class TestHandleErrors(unittest.TestCase):
             try:
                 None.open_sftp_client
             except AttributeError as e:
-                raise libcloud.compute.types.DeploymentError(object(), e)
+                raise libcloud.compute.types.DeploymentError(self.node, e)
         assert config.handle_errors(raises, out=self.devnull) == config.TIMEOUT
 
     def test_deployment_error(self):
@@ -51,5 +53,5 @@ class TestHandleErrors(unittest.TestCase):
             try:
                 None.foo
             except AttributeError as e:
-                raise libcloud.compute.types.DeploymentError(object(), e)
+                raise libcloud.compute.types.DeploymentError(self.node, e)
         assert config.handle_errors(raises, out=self.devnull) == config.DEPLOYMENT_ERROR
