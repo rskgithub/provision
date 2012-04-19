@@ -26,8 +26,12 @@ def get_driver(secret_key=config.DEFAULT_SECRET_KEY, userid=config.DEFAULT_USERI
     stale, so obtain them as late as possible, and don't cache them."""
 
     logger.debug('get_driver {0}@{1}'.format(userid, provider))
-    return libcloud.compute.providers.get_driver(
-        config.PROVIDERS[provider])(userid, secret_key)
+    if hasattr(config, 'get_driver'):
+        logger.debug('using config.get_driver()')
+        return config.get_driver()
+    else:
+        return libcloud.compute.providers.get_driver(
+            config.PROVIDERS[provider])(userid, secret_key)
 
 
 def list_nodes(driver):
@@ -212,6 +216,8 @@ class Deployment(object):
         size.  Then, get the image. Finally, deploy node, and return
         NodeProxy. """
 
+        logger.debug('deploying node %s using driver %s' % (self.name, driver))
+
         args = {'name': self.name}
 
         if 'SSH_KEY_PATH' in config.__dict__:
@@ -219,8 +225,6 @@ class Deployment(object):
                                            config.SSH_KEY_PATH).group('keyname')
         if 'EX_USERDATA' in config.__dict__:
             args['ex_userdata'] = config.EX_USERDATA
-
-        logger.debug('deploying node %s using driver %s' % (self.name, driver))
 
         args['location'] = driver.list_locations()[location_id]
         logger.debug('location %s' % args['location'])

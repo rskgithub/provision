@@ -6,8 +6,10 @@ def init(config):
     config.DEFAULT_SECRET_KEY = None
 
     config.add_bundle('bootstrap-python', ['bootstrap-python.sh'])
+    config.add_bundle('datablox', ['datablox.sh'])
     config.add_bundle('dev', ['emacs.sh', 'screen.sh'],
                       ['/root/.emacs.d/init.el', '/root/.screenrc', '/root/.tmux.conf'])
+    config.add_bundle('devstack',['devstack.sh'])
     config.add_bundle('hudson', ['jre.sh', 'postfix.sh', 'hudson.sh'])
     config.add_bundle('jenkins', ['jenkins.sh'])
     config.add_bundle('jre', ['jre.sh'])

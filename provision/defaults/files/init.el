@@ -10,7 +10,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there are more than one, they won't work right.
  '(show-paren-mode t nil (paren)))
-(custom-set-faces
- ;; Your init file should contain only one such instance.
- ;; If there are more than one, they won't work right.
- '(font-lock-comment-face ((default nil) (nil (:foreground "red")))))
+
