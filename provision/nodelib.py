@@ -245,7 +245,7 @@ class Deployment(object):
             if 'generates_password' in driver.features['create_node'] else None
 
         logger.debug('waiting for node to obtain public IP address')
-        node = driver.wait_until_running(node)
+        node = driver._wait_until_running(node)
 
         ssh_args = {'hostname': node.public_ip[0],
                     'port': 22,
@@ -259,11 +259,11 @@ class Deployment(object):
         ssh_client = libcloud.compute.ssh.SSHClient(**ssh_args)
 
         logger.debug('ssh client attempting to connect')
-        ssh_client = driver.connect_ssh_client(ssh_client)
+        ssh_client = driver._ssh_client_connect(ssh_client)
         logger.debug('ssh client connected')
 
         logger.debug('starting node deployment with %s steps' % len(self.deployment.steps))
-        driver.run_deployment_script(self.deployment, node, ssh_client)
+        driver._run_deployment_script(self.deployment, node, ssh_client)
 
         node.script_deployments = self.script_deployments # retain exit_status, stdout, stderr
 
