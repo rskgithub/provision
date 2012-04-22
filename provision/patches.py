@@ -14,16 +14,16 @@ class FileDeployment(libcloud.compute.deployment.Deployment):
     Install a file.
     """
 
-    def __init__(self, target, source):
+    def __init__(self, source, target):
         """
-        @type target: C{str}
-        @keyword target: Path on node to install file
-
         @type source: C{str}
         @keyword source: Local path of file to be installed
+
+        @type target: C{str}
+        @keyword target: Path on node to install file
         """
-        self.target = target
         self.source = source
+        self.target = target
 
     def run(self, node, client):
         """
@@ -32,7 +32,7 @@ class FileDeployment(libcloud.compute.deployment.Deployment):
         See also L{Deployment.run}
         """
         perms = os.stat(self.source).st_mode
-        client.put(path=self.target, chmod=perms, contents=open(self.source).read())
+        client.put(path=self.target, chmod=perms, contents=self.source)
         return node
 
 libcloud.compute.deployment.FileDeployment = FileDeployment

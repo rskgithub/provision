@@ -194,7 +194,7 @@ class Deployment(object):
         logger.debug('scripts {0}'.format(scriptmap.keys()))
 
         file_deployments = [libcloud.compute.deployment.FileDeployment(
-                target, source) for target, source in filemap.items()]
+                source, target) for target, source in filemap.items()]
         logger.debug('len(file_deployments) = {0}'.format(len(file_deployments)))
 
         self.script_deployments = [script_deployment(path, script, config.SUBMAP)
