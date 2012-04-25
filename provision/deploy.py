@@ -16,7 +16,7 @@ def parser():
     parser.add_argument('-l', '--location', default=config.DEFAULT_LOCATION_ID, type=int)
     parser.add_argument('-n', '--name',
                         help='generate randomized name based on prefix if name not specified')
-    parser.add_argument('-s', '--size', default=config.DEFAULT_SIZE_ID, type=int)
+    parser.add_argument('-s', '--size', default=config.DEFAULT_SIZE)
     parser.add_argument('-t', '--subvars', default=[], action='append',
                         help='key=value pairs of template substitution variables')
     parser.add_argument('-v', '--verbose', default=True)

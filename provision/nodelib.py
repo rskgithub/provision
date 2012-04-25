@@ -207,7 +207,7 @@ class Deployment(object):
         self.deployment = libcloud.compute.deployment.MultiStepDeployment(steps)
 
     def deploy(self, driver, location_id=config.DEFAULT_LOCATION_ID,
-               size_id=config.DEFAULT_SIZE_ID):
+               size=config.DEFAULT_SIZE):
 
         """Use driver to deploy node, with optional ability to specify
         location id and size id.
@@ -229,7 +229,7 @@ class Deployment(object):
         args['location'] = driver.list_locations()[location_id]
         logger.debug('location %s' % args['location'])
 
-        args['size'] = driver.list_sizes()[size_id]
+        args['size'] = size_from_name(size, driver.list_sizes())
         logger.debug('size %s' % args['size'])
 
         logger.debug('image name %s' % config.IMAGE_NAMES[self.image_name])
@@ -271,6 +271,15 @@ class Deployment(object):
 
         return NodeProxy(node, args['image'])
 
+
+def size_from_name(size, sizes):
+
+    """Return a size from a list of sizes."""
+
+    by_name = [s for s in sizes if s.name == size]
+    if len(by_name) > 1:
+        raise Exception('more than one image named %s exists' % size)
+    return by_name[0]
 
 def image_from_name(name, images):
 

@@ -39,7 +39,7 @@ IMAGE_NAMES = {
 
 DEFAULT_IMAGE_NAME = 'lucid'
 DEFAULT_LOCATION_ID = 0
-DEFAULT_SIZE_ID = 0
+DEFAULT_SIZE = '256 server'
 
 DEFAULT_PUBKEY = open(os.path.expanduser('~/.ssh/id_rsa.pub')).read()
 
