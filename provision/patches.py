@@ -32,7 +32,7 @@ class FileDeployment(libcloud.compute.deployment.Deployment):
         See also L{Deployment.run}
         """
         perms = os.stat(self.source).st_mode
-        client.put(path=self.target, chmod=perms, contents=self.source)
+        client.put(path=self.target, chmod=perms, contents=open(self.source).read())
         return node
 
 libcloud.compute.deployment.FileDeployment = FileDeployment
