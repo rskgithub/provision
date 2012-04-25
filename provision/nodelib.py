@@ -15,7 +15,8 @@ import libcloud.compute.ssh
 from libcloud.compute.types import NodeState
 
 import provision.config as config
-import provision.collections
+from provision.collections import OrderedDict
+
 logger = config.logger
 
 
@@ -179,7 +180,7 @@ class Deployment(object):
         self.image_name = image_name
 
         filemap = {}
-        scriptmap = provision.collections.OrderedDict() # preserve script run order
+        scriptmap = OrderedDict() # preserve script run order
 
         install_bundles = config.DEFAULT_BUNDLES[:]
         if image_name not in config.BOOTSTRAPPED_IMAGE_NAMES:

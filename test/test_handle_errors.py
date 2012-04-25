@@ -10,6 +10,7 @@ class TestHandleErrors(unittest.TestCase):
     def setUp(self):
         self.devnull = open('/dev/null', 'w')
         self.node = libcloud.compute.base.Node(1, 'testnode', None, None, None, None)
+        self.driver = object()
 
     def tearDown(self):
         self.devnull.close()
@@ -31,13 +32,13 @@ class TestHandleErrors(unittest.TestCase):
     def test_service_unavailable(self):
         def raises():
              raise libcloud.compute.types.MalformedResponseError(
-                 "Failed to parse XML", body='Service Unavailable', driver=object())
+                 "Failed to parse XML", body='Service Unavailable', driver=self.driver)
         assert config.handle_errors(raises, out=self.devnull) == config.SERVICE_UNAVAILABLE
 
     def test_malformed_response(self):
         def raises():
              raise libcloud.compute.types.MalformedResponseError(
-                 "Failed to parse XML", body='A bad response', driver=object())
+                 "Failed to parse XML", body='A bad response', driver=self.driver)
         assert config.handle_errors(raises, out=self.devnull) == config.MALFORMED_RESPONSE
 
     def test_timeout(self):
@@ -45,7 +46,7 @@ class TestHandleErrors(unittest.TestCase):
             try:
                 None.open_sftp_client
             except AttributeError as e:
-                raise libcloud.compute.types.DeploymentError(self.node, e)
+                raise libcloud.compute.types.DeploymentError(self.node, e, driver=self.driver)
         assert config.handle_errors(raises, out=self.devnull) == config.TIMEOUT
 
     def test_deployment_error(self):
@@ -53,5 +54,5 @@ class TestHandleErrors(unittest.TestCase):
             try:
                 None.foo
             except AttributeError as e:
-                raise libcloud.compute.types.DeploymentError(self.node, e)
+                raise libcloud.compute.types.DeploymentError(self.node, e, driver=self.driver)
         assert config.handle_errors(raises, out=self.devnull) == config.DEPLOYMENT_ERROR

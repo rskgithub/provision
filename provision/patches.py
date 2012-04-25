@@ -32,7 +32,30 @@ class FileDeployment(libcloud.compute.deployment.Deployment):
         See also L{Deployment.run}
         """
         perms = os.stat(self.source).st_mode
-        client.put(path=self.target, chmod=perms, contents=open(self.source).read())
+        client.put(path=self.target, chmod=perms,
+                   contents=open(self.source, 'rb').read())
         return node
 
 libcloud.compute.deployment.FileDeployment = FileDeployment
+
+
+import libcloud.compute.types
+class DeploymentError(libcloud.compute.types.LibcloudError):
+    """
+    Exception used when a Deployment Task failed.
+
+    @ivar node: L{Node} on which this exception happened, you might want to call L{Node.destroy}
+    """
+    def __init__(self, node, original_exception=None, driver=None):
+        self.node = node
+        self.value = original_exception
+        self.driver = driver
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return (('<DeploymentError: node=%s, error=%s>'
+                % (self.node.id, str(self.value))))
+
+libcloud.compute.types.DeploymentError = DeploymentError

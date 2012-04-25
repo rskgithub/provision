@@ -23,10 +23,18 @@ import traceback
 
 import socket; socket.setdefaulttimeout(600.0) # give APIs 10 minutes
 
-from libcloud.compute.types import Provider, DeploymentError
-from libcloud.common.types import MalformedResponseError
+import logging
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)s %(levelname)s %(message)s')
+logger = logging.getLogger('provision')
 
-import provision.collections
+logger.debug('monkey patching libcloud')
+import provision.patches
+
+from libcloud.common.types import MalformedResponseError
+from libcloud.compute.types import Provider, DeploymentError
+
+from provision.collections import OrderedDict
 
 join = os.path.join
 
@@ -80,12 +88,6 @@ DEFAULT_BUNDLES = [] # these get installed if image name in BOOTSTRAPPED_IMAGE_N
 DEFAULT_BOOTSTRAP_BUNDLES = [] # otherwise these get installed
 
 PATH = None
-
-import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(name)s %(levelname)s %(message)s')
-logger = logging.getLogger('provision')
-
 
 # error codes for corresponding exceptions
 EXCEPTION = 11
@@ -147,7 +149,7 @@ class Bundle(object):
         @type filemap: C{dict}
         @keyword filemap: Maps target path to source path for files
         """
-        self.scriptmap = scriptmap or provision.collections.OrderedDict()
+        self.scriptmap = scriptmap or OrderedDict()
         self.filemap = filemap or {}
 
 def makemap(filenames, sourcedir, targetdir=None):
@@ -159,7 +161,7 @@ def makemap(filenames, sourcedir, targetdir=None):
     directory."""
 
     if targetdir is None: targetdir = DEFAULT_TARGETDIR
-    return provision.collections.OrderedDict(
+    return OrderedDict(
         (join(targetdir, f),  join(sourcedir, f)) for f in filenames)
 
 def add_bundle(name, scripts=[], files=[], scriptsdir=SCRIPTSDIR, filesdir=FILESDIR):
@@ -307,6 +309,3 @@ if os.path.exists(LOCAL_DEFAULTS):
 if os.path.exists(VIRTUAL_DEFAULTS):
     defaults.append(VIRTUAL_DEFAULTS)
 configure(defaults, CODEPATH)
-
-logger.debug('monkey patching libcloud')
-import provision.patches
