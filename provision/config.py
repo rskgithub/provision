@@ -62,6 +62,8 @@ DEFAULT_TARGETDIR = '/root/deploy'
 
 DEFAULT_NAME_PREFIX = 'deploy-test-'
 
+SSH_INTERFACE = 'public_ips'
+
 DESTROYABLE_PREFIXES = [DEFAULT_NAME_PREFIX]
 
 TEMPLATE_RE = re.compile('#.+provision-template-type:\W*(?P<type>[\w-]+)')

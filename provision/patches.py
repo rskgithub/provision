@@ -59,3 +59,51 @@ class DeploymentError(libcloud.compute.types.LibcloudError):
                 % (self.node.id, str(self.value))))
 
 libcloud.compute.types.DeploymentError = DeploymentError
+
+
+import time
+from libcloud.common.types import LibcloudError
+from libcloud.compute.types import NodeState
+
+def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600,
+                                  ssh_interface='public_ips'):
+    """
+    Block until node is fully booted and has an IP address assigned.
+
+    @keyword    node: Node instance.
+    @type       node: C{Node}
+
+    @keyword    wait_period: How many seconds to between each loop
+                             iteration (default is 3)
+    @type       wait_period: C{int}
+
+    @keyword    timeout: How many seconds to wait before timing out
+                         (default is 600)
+    @type       timeout: C{int}
+
+    @return: C{Node} Node instance on success.
+    """
+    start = time.time()
+    end = start + timeout
+
+    while time.time() < end:
+        nodes = self.list_nodes()
+        nodes = list([n for n in nodes if n.uuid == node.uuid])
+
+        if len(nodes) > 1:
+            raise LibcloudError(value=('Booted single node[%s], ' % node
+                                + 'but multiple nodes have same UUID'),
+                                driver=self)
+
+        if (len(nodes) == 1 and nodes[0].state == NodeState.RUNNING and \
+                hasattr(nodes[0], ssh_interface) and getattr(nodes[0], ssh_interface)):
+            return (nodes[0], getattr(nodes[0], ssh_interface))
+        else:
+            time.sleep(wait_period)
+            continue
+
+    raise LibcloudError(value='Timed out after %s seconds' % (timeout),
+                        driver=self)
+
+import libcloud.compute.base
+libcloud.compute.base.NodeDriver._wait_until_running = NodeDriver_wait_until_running

@@ -245,10 +245,10 @@ class Deployment(object):
         password = node.extra.get('password') \
             if 'generates_password' in driver.features['create_node'] else None
 
-        logger.debug('waiting for node to obtain public IP address')
-        node = driver._wait_until_running(node)
+        logger.debug('waiting for node to obtain %s' % config.SSH_INTERFACE)
+        node, ip_addresses = driver._wait_until_running(node, ssh_interface=config.SSH_INTERFACE)
 
-        ssh_args = {'hostname': node.public_ip[0],
+        ssh_args = {'hostname': ip_addresses[0],
                     'port': 22,
                     'timeout': 10}
         if password:
