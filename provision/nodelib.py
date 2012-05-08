@@ -221,10 +221,10 @@ class Deployment(object):
 
         args = {'name': self.name}
 
-        if 'SSH_KEY_PATH' in config.__dict__:
+        if hasattr(config, 'SSH_KEY_PATH') and config.SSH_KEY_PATH.endswith('.pem'):
             args['ex_keyname'] = re.search('(?P<keyname>[\w-]+).pem',
                                            config.SSH_KEY_PATH).group('keyname')
-        if 'EX_USERDATA' in config.__dict__:
+        if hasattr(config, 'EX_USERDATA'):
             args['ex_userdata'] = config.EX_USERDATA
 
         args['location'] = driver.list_locations()[location_id]
@@ -254,7 +254,7 @@ class Deployment(object):
         if password:
             ssh_args['password'] = password
         else:
-            ssh_args['key'] = config.SSH_KEY_PATH
+            ssh_args['key'] = config.SSH_KEY_PATH if hasattr(config, 'SSH_KEY_PATH') else None
 
         logger.debug('initializing ssh client with %s' % ssh_args)
         ssh_client = libcloud.compute.ssh.SSHClient(**ssh_args)
