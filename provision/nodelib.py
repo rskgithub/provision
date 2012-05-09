@@ -221,9 +221,9 @@ class Deployment(object):
 
         args = {'name': self.name}
 
-        if hasattr(config, 'SSH_KEY_PATH') and config.SSH_KEY_PATH.endswith('.pem'):
-            args['ex_keyname'] = re.search('(?P<keyname>[\w-]+).pem',
-                                           config.SSH_KEY_PATH).group('keyname')
+        if hasattr(config, 'SSH_KEY_NAME'):
+            args['ex_keyname'] = config.SSH_KEY_NAME
+
         if hasattr(config, 'EX_USERDATA'):
             args['ex_userdata'] = config.EX_USERDATA
 
