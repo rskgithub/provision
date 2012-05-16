@@ -242,15 +242,16 @@ class Deployment(object):
         node = driver.create_node(**args)
         logger.debug('node created')
 
+        # password must be extracted before _wait_until_running(), where it goes away
+        logger.debug('driver.features %s' % driver.features)
         password = node.extra.get('password') \
             if 'generates_password' in driver.features['create_node'] else None
 
         logger.debug('waiting for node to obtain %s' % config.SSH_INTERFACE)
-        node, ip_addresses = driver._wait_until_running(node, ssh_interface=config.SSH_INTERFACE)
+        node, ip_addresses = driver._wait_until_running(
+            node, timeout=1200, ssh_interface=config.SSH_INTERFACE)
 
-        ssh_args = {'hostname': ip_addresses[0],
-                    'port': 22,
-                    'timeout': 10}
+        ssh_args = {'hostname': ip_addresses[0], 'port': 22, 'timeout': 10}
         if password:
             ssh_args['password'] = password
         else:
