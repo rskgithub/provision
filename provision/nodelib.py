@@ -26,11 +26,11 @@ def get_driver(secret_key=config.DEFAULT_SECRET_KEY, userid=config.DEFAULT_USERI
     """A driver represents successful authentication.  They become
     stale, so obtain them as late as possible, and don't cache them."""
 
-    logger.debug('get_driver {0}@{1}'.format(userid, provider))
     if hasattr(config, 'get_driver'):
-        logger.debug('using config.get_driver()')
+        logger.debug('get_driver %s' % config.get_driver)
         return config.get_driver()
     else:
+        logger.debug('get_driver {0}@{1}'.format(userid, provider))
         return libcloud.compute.providers.get_driver(
             config.PROVIDERS[provider])(userid, secret_key)
 
