@@ -1,5 +1,4 @@
 """This module contains various monkey patches to libcloud libraries
-necessary for aws support.
 
 see: http://stackoverflow.com/questions/3765222/monkey-patch-python-class
 """
@@ -107,7 +106,3 @@ def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600,
 
 import libcloud.compute.base
 libcloud.compute.base.NodeDriver._wait_until_running = NodeDriver_wait_until_running
-
-import libcloud.compute.drivers.openstack
-libcloud.compute.drivers.openstack.OpenStack_1_1_NodeDriver.features = \
-    {'create_node': ['ssh_key']}
