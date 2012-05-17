@@ -80,6 +80,10 @@ def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600,
                          (default is 600)
     @type       timeout: C{int}
 
+    @keyword    ssh_interface: The interface to wait for
+                               (default is 'public_ips')
+    @type       ssh_interface: C{str}
+
     @return: C{Node} Node instance on success.
     """
     start = time.time()
