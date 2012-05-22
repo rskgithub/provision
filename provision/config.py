@@ -85,9 +85,8 @@ PUBKEYS = []
 SUBMAP = {}
 BUNDLEMAP = {}
 
-BOOTSTRAPPED_IMAGE_NAMES = []
-DEFAULT_BUNDLES = [] # these get installed if image name in BOOTSTRAPPED_IMAGE_NAMES
-DEFAULT_BOOTSTRAP_BUNDLES = [] # otherwise these get installed
+DEFAULT_BUNDLES = []
+IMAGE_BUNDLES_MAP = {}
 
 PATH = None
 

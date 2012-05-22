@@ -183,8 +183,9 @@ class Deployment(object):
         scriptmap = OrderedDict() # preserve script run order
 
         install_bundles = config.DEFAULT_BUNDLES[:]
-        if image_name not in config.BOOTSTRAPPED_IMAGE_NAMES:
-            install_bundles.extend(config.DEFAULT_BOOTSTRAP_BUNDLES[:])
+        image_based_bundles = config.IMAGE_BUNDLES_MAP.get(image_name)
+        if image_based_bundles:
+            install_bundles.extend(image_based_bundles[:])
         install_bundles.extend(bundles)
 
         for bundle in install_bundles:
