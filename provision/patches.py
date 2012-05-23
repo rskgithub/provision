@@ -65,7 +65,7 @@ from libcloud.common.types import LibcloudError
 from libcloud.compute.types import NodeState
 
 def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600,
-                                  ssh_interface='public_ips', ignore_ipv6=True):
+                                  ssh_interface='public_ips', force_ipv4=True):
     """
     Block until node is fully booted and has an IP address assigned.
 
@@ -84,23 +84,24 @@ def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600,
                                (default is 'public_ips')
     @type       ssh_interface: C{str}
 
-    @keyword    ignore_ipv6: Ignore ipv6 IP addresses (default is True)
-    @type       ignore_ipv6: C{bool}
+    @keyword    force_ipv4: Ignore ipv6 IP addresses (default is True)
+    @type       force_ipv4: C{bool}
 
-    @return: C{Node} Tuple of Node instance, list of ip4v addresses on success.
+    @return: C{(Node, ip_addresses)} tuple of Node instance and
+             list of ip_address on success.
     """
     start = time.time()
     end = start + timeout
 
-    def is_valid(address):
-        """Return True for valid address"""
-        if ignore_ipv6 and len(address.split(':')) == 8:
+    def is_supported(address):
+        """Return True for supported address"""
+        if force_ipv4 and not len(address.split('.')) == 4:
             return False
         return True
 
-    def validate(addresses):
-        """Return list of valid addresses"""
-        return [a for a in addresses if is_valid(a)]
+    def filter_addresses(addresses):
+        """Return list of supported addresses"""
+        return [a for a in addresses if is_supported(a)]
 
     while time.time() < end:
         nodes = [n for n in self.list_nodes() if n.uuid == node.uuid]
@@ -109,9 +110,12 @@ def NodeDriver_wait_until_running(self, node, wait_period=3, timeout=600,
             raise LibcloudError(value=('Booted single node[%s], ' % node
                                 + 'but multiple nodes have same UUID'),
                                 driver=self)
+        if len(nodes) == 1:
+            print nodes[0].state, getattr(nodes[0], ssh_interface)
 
-        if len(nodes) == 1 and validate(getattr(nodes[0], ssh_interface)):
-            return nodes[0], validate(getattr(nodes[0], ssh_interface))
+        if len(nodes) == 1 and filter_addresses(getattr(nodes[0], ssh_interface)) \
+                and nodes[0].state == NodeState.RUNNING:
+            return nodes[0], filter_addresses(getattr(nodes[0], ssh_interface))
         else:
             time.sleep(wait_period)
             continue
