@@ -53,7 +53,9 @@ DEFAULT_PUBKEY = open(os.path.expanduser('~/.ssh/id_rsa.pub')).read()
 
 # Note that the last directory in the path cannot start with a '.'
 # due to module naming restrictions
-LOCAL_DEFAULTS = os.path.expanduser('~/.provision/secrets')
+PROVISION_LOCAL = os.getenv('PROVISION_LOCAL')
+LOCAL_DEFAULTS = PROVISION_LOCAL if PROVISION_LOCAL \
+    else os.path.expanduser('~/.provision/secrets')
 
 VIRTUAL_ENV = os.getenv('VIRTUAL_ENV')
 VIRTUAL_DEFAULTS = join(VIRTUAL_ENV, 'provision_secrets') if VIRTUAL_ENV else ''
