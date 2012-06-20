@@ -57,8 +57,16 @@ PROVISION_LOCAL = os.getenv('PROVISION_LOCAL')
 LOCAL_DEFAULTS = PROVISION_LOCAL if PROVISION_LOCAL \
     else os.path.expanduser('~/.provision/secrets')
 
+VIRTUAL_SECRETS_PATH_CANDIDATES = ['provision_secrets', 'provision-secrets']
+
+VIRTUAL_DEFAULTS = None
 VIRTUAL_ENV = os.getenv('VIRTUAL_ENV')
-VIRTUAL_DEFAULTS = join(VIRTUAL_ENV, 'provision_secrets') if VIRTUAL_ENV else ''
+if VIRTUAL_ENV:
+    # use the first candidate path that exists
+    possible_secrets_paths = [join(VIRTUAL_ENV, p) for p in VIRTUAL_SECRETS_PATH_CANDIDATES]
+    existing_paths = [p for p in possible_secrets_paths if os.path.exists(p)]
+    if existing_paths:
+        VIRTUAL_DEFAULTS = join(existing_paths[0], 'common')
 
 DEFAULT_TARGETDIR = '/root/deploy'
 
@@ -309,6 +317,6 @@ def reconfig(main_parser, args=sys.argv[1:]):
 defaults = ['defaults']
 if os.path.exists(LOCAL_DEFAULTS):
     defaults.append(LOCAL_DEFAULTS)
-if os.path.exists(VIRTUAL_DEFAULTS):
+if VIRTUAL_DEFAULTS and os.path.exists(VIRTUAL_DEFAULTS):
     defaults.append(VIRTUAL_DEFAULTS)
 configure(defaults, CODEPATH)
