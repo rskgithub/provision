@@ -7,7 +7,7 @@ def init(config):
 
     config.add_bundle('bootstrap-python', ['bootstrap-python.sh'])
     config.add_bundle('datablox', ['datablox.sh'])
-    config.add_bundle('dev', ['emacs.sh', 'screen.sh'],
+    config.add_bundle('dev', ['emacs.sh', 'screen.sh', 'tmux.sh'],
                       ['/root/.emacs.d/init.el', '/root/.screenrc', '/root/.tmux.conf'])
     config.add_bundle('devstack',['devstack.sh'])
     config.add_bundle('hudson', ['jre.sh', 'postfix.sh', 'hudson.sh'])
