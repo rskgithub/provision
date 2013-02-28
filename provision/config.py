@@ -42,10 +42,10 @@ PROVIDERS = {
     'rackspace': Provider.RACKSPACE}
 
 IMAGE_NAMES = {
-    'lucid': 'Ubuntu 10.04 LTS',
+    'precise': 'Ubuntu 12.04 LTS',
     'oneiric': 'Ubuntu 11.10'}
 
-DEFAULT_IMAGE_NAME = 'lucid'
+DEFAULT_IMAGE_NAME = 'precise'
 DEFAULT_LOCATION_ID = 0
 DEFAULT_SIZE = '256 server'
 
