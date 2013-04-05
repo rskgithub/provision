@@ -67,9 +67,14 @@ class NodeProxy(object):
     def __repr__(self):
         s = self.node.__repr__()
         if hasattr(self.node, 'script_deployments') and self.node.script_deployments:
+            ascii_deployments = [ # force script output to ascii encoding
+                {'name':sd.name, 'exit_status':sd.exit_status, 'script':sd.script,
+                 'stdout': sd.stdout.decode('ascii', 'ignore'),
+                 'stderr': sd.stderr.decode('ascii', 'ignore')}
+                for sd in self.node.script_deployments]
             s += '\n'.join(
-                ['*{0.name}: {0.exit_status}\n{0.script}\n{0.stdout}\n{0.stderr}'.format(sd)
-                 for sd in self.node.script_deployments])
+                ['*{name}: {exit_status}\n{script}\n{stdout}\n{stderr}'.format(**sd)
+                 for sd in ascii_deployments])
         return s
 
     def destroy(self):
